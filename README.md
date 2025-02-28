@@ -1,8 +1,8 @@
 # OpenTAD: An Open-Source Temporal Action Detection Toolbox.
 
 <p align="left">
-<!-- <a href="https://arxiv.org/abs/xxx.xxx" alt="arXiv"> -->
-    <!-- <img src="https://img.shields.io/badge/arXiv-xxx.xxx-b31b1b.svg?style=flat" /></a> -->
+<a href="https://arxiv.org/abs/2502.20361" alt="arXiv">
+    <img src="https://img.shields.io/badge/arXiv-2502.20361-b31b1b.svg?style=flat" /></a>
 <a href="https://github.com/sming256/opentad/blob/main/LICENSE" alt="license">
     <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a>
 <a href="https://github.com/sming256/OpenTAD/issues" alt="docs">
@@ -16,7 +16,6 @@ OpenTAD is an open-source temporal action detection (TAD) toolbox based on PyTor
 
 ## 🥳 What's New
 
-- A technical report of this library will be provided soon.
 - **[2024/07/25]** 🔥 We rank 1st in the [Action Recognition](https://codalab.lisn.upsaclay.fr/competitions/776#results), [Action Detection](https://codalab.lisn.upsaclay.fr/competitions/707), and [Audio-Based Interaction Detection](https://codalab.lisn.upsaclay.fr/competitions/17921#results) tasks of the EPIC-KITCHENS-100 2024 Challenge, as well as 1st place in the [Moment Queries](https://eval.ai/web/challenges/challenge-page/1626/leaderboard/3913) task of the Ego4D 2024 Challenge! Code is released at [CausalTAD (arxiv'24)](configs/causaltad/).
 - **[2024/07/07]** 🔥 We support [DyFADet (ECCV'24)](configs/dyfadet/). Thanks to the authors's effort!
 - **[2024/06/14]** We release [version v0.3](docs/en/changelog.md), which brings many new features and improvements.
@@ -117,11 +116,11 @@ All the things that need to be done in the future is in [roadmap.md](docs/en/roa
 If you think this repo is helpful, please cite us:
 
 ```bibtex
-@misc{2024opentad,
-    title={OpenTAD: An Open-Source Toolbox for Temporal Action Detection},
-    author={Shuming Liu, Chen Zhao, Fatimah Zohra, Mattia Soldan, Carlos Hinojosa, Alejandro Pardo, Anthony Cioppa, Lama Alssum, Mengmeng Xu, Merey Ramazanova, Juan León Alcázar, Silvio Giancola, Bernard Ghanem},
-    howpublished = {\url{https://github.com/sming256/opentad}},
-    year={2024}
+@article{liu2025opentad,
+  title={OpenTAD: A Unified Framework and Comprehensive Study of Temporal Action Detection},
+  author={Liu, Shuming and Zhao, Chen and Zohra, Fatimah and Soldan, Mattia and Pardo, Alejandro and Xu, Mengmeng and Alssum, Lama and Ramazanova, Merey and Alcázar, Juan León and Cioppa, Anthony and Giancola, Silvio and Hinojosa, Carlos and Ghanem, Bernard},
+  journal={arXiv preprint arXiv:2502.20361},
+  year={2025}
 }
 ```
 
