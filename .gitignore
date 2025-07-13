@@ -4,7 +4,7 @@
 dataset
 /pretrained/
 /logs/
-/exps/
+/exps/pc3dhuman/gpu1_id0/checkpoint
 /trash/
 
 # ignore annotation
