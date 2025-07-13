@@ -1,7 +1,7 @@
 dataset_type = "ThumosSlidingDataset"
-annotation_path = "../../../../data/pc3dhumanact/annotations/anno.json"
-class_map = "../../../../data/pc3dhumanact/annotations/category_idx.txt"
-data_path = "../../../../data/pc3dhumanact/features/"
+annotation_path = "/tad_work/OpenTAD/data/pc3dhumanact2/annotations/anno.json"
+class_map = "/tad_work/OpenTAD/data/pc3dhumanact2/annotations/category_idx.txt"
+data_path = "/tad_work/OpenTAD/data/pc3dhumanact2/features/"
 block_list = data_path + "missing_files.txt"
 
 window_size = 1024
@@ -25,7 +25,7 @@ dataset = dict(
             dict(type="LoadFeats", feat_format="npy"),
             dict(type="ConvertToTensor", keys=["feats", "gt_segments", "gt_labels"]),
             dict(type="SlidingWindowTrunc", with_mask=True),
-            dict(type="Rearrange", keys=["feats"], ops="t c -> c t"),
+            dict(type="Rearrange", keys=["feats"], ops="t n c -> n c t"),
             dict(type="Collect", inputs="feats", keys=["masks", "gt_segments", "gt_labels"]),
         ],
     ),
@@ -47,7 +47,7 @@ dataset = dict(
             dict(type="LoadFeats", feat_format="npy"),
             dict(type="ConvertToTensor", keys=["feats", "gt_segments", "gt_labels"]),
             dict(type="SlidingWindowTrunc", with_mask=True),
-            dict(type="Rearrange", keys=["feats"], ops="t c -> c t"),
+            dict(type="Rearrange", keys=["feats"], ops="t n c -> n c t"),
             dict(type="Collect", inputs="feats", keys=["masks", "gt_segments", "gt_labels"]),
         ],
     ),
@@ -70,7 +70,7 @@ dataset = dict(
             dict(type="LoadFeats", feat_format="npy"),
             dict(type="ConvertToTensor", keys=["feats"]),
             dict(type="SlidingWindowTrunc", with_mask=True),
-            dict(type="Rearrange", keys=["feats"], ops="t c -> c t"),
+            dict(type="Rearrange", keys=["feats"], ops="t n c -> n c t"),
             dict(type="Collect", inputs="feats", keys=["masks"]),
         ],
     ),

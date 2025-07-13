@@ -3,10 +3,10 @@ _base_ = [
     "../_base_/models/pointactionformer.py",  # model config
 ]
 
-model = dict(projection=dict(in_channels=256))
+model = dict(projection=dict(in_channels=128))
 
 solver = dict(
-    train=dict(batch_size=2, num_workers=2),
+    train=dict(batch_size=1, num_workers=2),
     val=dict(batch_size=1, num_workers=1),
     test=dict(batch_size=1, num_workers=1),
     clip_grad_norm=1,
@@ -31,11 +31,11 @@ post_processing = dict(
 )
 
 workflow = dict(
-    logging_interval=20,
+    logging_interval=1,
     checkpoint_interval=1,
     val_loss_interval=1,
     val_eval_interval=1,
-    val_start_epoch=30,
+    val_start_epoch=1,
 )
 
-work_dir = "exps/thumos/actionformer_i3d"
+work_dir = "exps/pc3dhuman"

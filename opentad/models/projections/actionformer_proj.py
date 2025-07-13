@@ -2,9 +2,14 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.cuda.amp import autocast
+
 
 from ..bricks import ConvModule, TransformerBlock
 from ..builder import PROJECTIONS
+import sys
+sys.path.append(r"/tad_work/Pointnet_Pointnet2_pytorch/models")
+import pointnet2_cls_msg, pointnet_cls
 
 
 @PROJECTIONS.register_module()
@@ -186,7 +191,7 @@ def get_sinusoid_encoding(n_position, d_hid):
     return torch.FloatTensor(sinusoid_table).unsqueeze(0).transpose(1, 2)
 
 
-class PC3DFeatExtractor(nn.Module):
+class PC3DFeatExtractor(nn.Module):  #self-defined high dimensional convolution feature extractor. however, it cannot be used due to high computation demand.
     """
     Extract per-frame spatial features from 5D+T input (B, H, W, D, C, T) and
     project to (B, embed_dim, T) for temporal processing.
@@ -272,7 +277,9 @@ class PCTransformerProj(nn.Module):
         self.input_pdrop = nn.Dropout1d(p=input_pdrop) if input_pdrop > 0 else None
 
         # point cloud feature extractor
-        self.PCFE = PC3DFeatExtractor(spatial_in_channels=prep_cfg["input_channels"], spatial_conv_channels=prep_cfg["conv_channels"], embed_dim=prep_cfg["embed_channels"])
+        # self.PCFE = PC3DFeatExtractor(spatial_in_channels=prep_cfg["input_channels"], spatial_conv_channels=prep_cfg["conv_channels"], embed_dim=prep_cfg["embed_channels"])
+        # self.PCFE = pointnet2_cls_msg.get_model(num_class=6, normal_channel=False) # pointnet++ feature extractor, unusable due to high computational demand too.
+        self.PCFE = pointnet_cls.get_model(k=2, normal_channel=False)
 
         if isinstance(self.n_mha_win_size, int):
             self.mha_win_size = [self.n_mha_win_size] * (1 + arch[-1])
@@ -361,8 +368,30 @@ class PCTransformerProj(nn.Module):
         # mask: batch size, sequence length (bool)
 
         # feature extraction
-        x = self.PCFE(x)
-        
+        B, N, C, T = x.shape
+        # x = x.permute(0, 3, 2, 1)    # → [B, T, C, N]
+        # x = x.reshape(B * T, C, N)   # → [B*T, C, N]
+        # x = self.PCFE(x)
+        # x = x.view(B, T, 1024).permute(0, 2, 1)  # → [B, 1024, T]
+
+        # x = x.permute(0, 2, 1, 3)  # -> [B, C, N, T]
+        # outputs = []
+        # with torch.no_grad():
+        #     for t in range(T):
+        #         _,_,out = self.PCFE(x[:, :, :, t])  # x: [B, C, N, T]
+        #         outputs.append(out)               # 每帧单独处理
+        #         torch.cuda.empty_cache()
+        # x = torch.stack(outputs, dim=-1)      # → [B, 1024, T]
+
+        x = x.permute(0, 3, 2, 1)
+        #print(x.shape)
+        x = x.reshape(B * T, C, N)  # → (B*T, 4, 406)
+        _, _, x, _ = self.PCFE(x)  #here output of PCFE is of 256 dims
+        x = x.view(B, T, 256)    # → (B, T, 256), 256 is the output dim of PCFE
+
+    
+
+
         # feature projection
         if self.proj is not None:
             x = torch.cat([proj(s, mask)[0] for proj, s in zip(self.proj, x.split(self.in_channels, dim=1))], dim=1)

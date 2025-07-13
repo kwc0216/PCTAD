@@ -110,7 +110,7 @@ class ActionFormer(SingleStageDetector):
         # see https://github.com/karpathy/minGPT/blob/master/mingpt/model.py#L134
         decay = set()
         no_decay = set()
-        whitelist_weight_modules = (nn.Linear, nn.Conv1d)
+        whitelist_weight_modules = (nn.Linear, nn.Conv1d, nn.Conv3d)
         blacklist_weight_modules = (nn.LayerNorm, nn.GroupNorm)
 
         # loop over all modules / params
@@ -122,7 +122,9 @@ class ActionFormer(SingleStageDetector):
                 if fpn.startswith("backbone"):
                     continue
 
-                if pn.endswith("bias"):
+                if "PCFE" in fpn:
+                    no_decay.add(fpn)
+                elif pn.endswith("bias"):
                     # all biases will not be decayed
                     no_decay.add(fpn)
                 elif pn.endswith("weight") and isinstance(m, whitelist_weight_modules):
@@ -137,6 +139,7 @@ class ActionFormer(SingleStageDetector):
                 elif pn.endswith("rel_pe"):
                     # corner case for relative position encoding
                     no_decay.add(fpn)
+                
 
         # validate that we considered every parameter
         param_dict = {pn: p for pn, p in self.named_parameters() if not pn.startswith("backbone")}
